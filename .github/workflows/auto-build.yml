@@ -25,7 +25,7 @@ jobs:
         run: nuget restore rdpWrapper.sln
 
       - name: Build
-        run: msbuild rdpWrapper.sln -p:Configuration=Release -p:Platform="x64" -m
+        run: msbuild rdpWrapper.sln /t:restore /p:RestorePackagesConfig=true /p:Configuration=Release /p:Platform="x64"
 
       # - name: Publish build
       #   uses: actions/upload-artifact@v4
