@@ -58,7 +58,31 @@ Don't forget to restart the app to scan for new theme files!
 
 The published version can be obtained from [releases](https://github.com/rdp-wrapper/rdpWrapper/releases).
 
+> [!WARNING]
+>Microsoft and other major antivirus vendors have flagged RdpWrapper as "malware". This is likely due to Microsoft's hatred against RdpWrapper, not because it contains a virus or such. Flags from Microsoft usually spread to other antivirus vendors.
+>RdpWrapper has a history of being falsely detected as malware by antiviruses (including Defender). This is likely due to its behavior, such as placing binaries in `c:\Program Files\` and performing in-memory extraction of wrapping libraries.
 
+Currently, Defender does not flag this release, but it is likely that future updates may being flagged by Defender's machine learning-based detection systems within a few days of release.
+
+> [!IMPORTANT]
+>If Defender or another antivirus detects any part of RdpWrapper as malware, it may prevent proper work or cause application to fail to start.
+> RdpWrapper will not start if this file exists but is blocked from being loaded.
+>We strongly recommend excluding RdpWrapper's binaries from antivirus scans
+
+
+> [!TIP]
+> Please include the following folder in your antivirus' exclusion list to prevent issues due to antivirus detections:
+> c:\Program Files\RDP Wrapper\
+
+RdpWrapper can add this exception automatically only for Defender, but if it does not, you can do it manually
+
+For Defender, you can run the following script in PowerShell as an administrator:
+`Add-MpPreference -ExclusionPath "c:\Program Files\RDP Wrapper\"`
+
+
+> [!CAUTION]
+> If your antivirus deletes the downloaded app file, you may need to temporarily disable real-time protection or save the file in an excluded folder.
+> If you are uncomfortable with this process, or if your antivirus is managed by your company, we advise against using RdpWrapper. Please consider alternative solutions instead.
 
 ## Notes
 
