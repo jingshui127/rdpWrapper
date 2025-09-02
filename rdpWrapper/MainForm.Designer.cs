@@ -58,6 +58,7 @@ namespace rdpWrapper {
       this.uninstallMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.restartServiceMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.generateMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.editWrapIniMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
       this.addUserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.fixMSUserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -468,6 +469,7 @@ namespace rdpWrapper {
             this.uninstallMenuItem,
             this.restartServiceMenuItem,
             this.generateMenuItem,
+            this.editWrapIniMenuItem,
             this.toolStripMenuItem3,
             this.addUserToolStripMenuItem,
             this.fixMSUserMenuItem,
@@ -504,6 +506,13 @@ namespace rdpWrapper {
       this.generateMenuItem.Size = new System.Drawing.Size(251, 22);
       this.generateMenuItem.Text = "Generate \'wrap.ini\'";
       this.generateMenuItem.Click += new System.EventHandler(this.btnGenerate_Click);
+      // 
+      // editWrapIniMenuItem
+      // 
+      this.editWrapIniMenuItem.Name = "editWrapIniMenuItem";
+      this.editWrapIniMenuItem.Size = new System.Drawing.Size(251, 22);
+      this.editWrapIniMenuItem.Text = "Edit \'wrap.ini\'";
+      this.editWrapIniMenuItem.Click += new System.EventHandler(this.btnEditWrapIni_Click);
       // 
       // toolStripMenuItem3
       // 
@@ -724,6 +733,7 @@ namespace rdpWrapper {
     private ToolStripMenuItem installMenuItem;
     private ToolStripMenuItem uninstallMenuItem;
     private ToolStripMenuItem generateMenuItem;
+    private ToolStripMenuItem editWrapIniMenuItem;
     private ToolStripMenuItem restartServiceMenuItem;
     private ToolStripMenuItem addUserToolStripMenuItem;
     private ToolStripMenuItem fixMSUserMenuItem;

@@ -99,7 +99,7 @@ namespace rdpWrapper {
         // "-offline" should be the LAST parameter 
         var offline = args.Any(a => a == "-offline");
         if (!offline) {
-          Updater.CheckForUpdates(true);
+          Updater.CheckForUpdates(Updater.CheckUpdatesMode.NotifyOnNewVersion);
         }
         switch (args[0]) {
           case "-help":

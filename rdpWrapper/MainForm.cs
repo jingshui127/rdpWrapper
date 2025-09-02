@@ -187,16 +187,12 @@ namespace rdpWrapper {
         (message) => {
           return MessageBox.Show(message, Updater.ApplicationName, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK;
         },
-        Application.Exit
+        () => { btnClose_Click(null, EventArgs.Empty); }
       );
 
-      var timer = new Timer();
-      timer.Tick += async (_, _) => {
-        timer.Enabled = false;
-        timer.Enabled = !await Updater.CheckForUpdatesAsync(true);
-      };
-      timer.Interval = 3000;
-      timer.Enabled = true;
+      var timer = new System.Threading.Timer((_) => {
+        Updater.CheckForUpdates(Updater.CheckUpdatesMode.AutoUpdate);
+      }, null, 10 * 1000, 1000 * 60 * 60 * 24);
     }
 
     protected override void WndProc(ref Message m) {
@@ -214,7 +210,7 @@ namespace rdpWrapper {
     }
 
     private void checkFoNewVersionToolStripMenuItem_Click(object sender, EventArgs e) {
-      Updater.CheckForUpdates(false);
+      Updater.CheckForUpdates(Updater.CheckUpdatesMode.AllMessages);
     }
 
     private void siteToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -260,6 +256,10 @@ namespace rdpWrapper {
     }
 
     private void btnClose_Click(object sender, EventArgs e) {
+      if (InvokeRequired) {
+        Invoke(new EventHandler(btnClose_Click), sender, e);
+        return;
+      }
       Close();
     }
 
@@ -418,7 +418,7 @@ namespace rdpWrapper {
 #if LITEVERSION
         btnGenerate.Visible = false;
 #else
-        generateMenuItem.Enabled = btnGenerate.Enabled = btnGenerate.Visible = wrapperInstalled == WrapperInstalledState.RdpWrap;
+        editWrapIniMenuItem.Enabled = generateMenuItem.Enabled = btnGenerate.Enabled = btnGenerate.Visible = wrapperInstalled == WrapperInstalledState.RdpWrap;
 #endif
         lblSupported.Visible = checkSupported is true;
         if (checkSupported is true) {
@@ -548,6 +548,27 @@ namespace rdpWrapper {
       }
     }
 
+    private void btnEditWrapIni_Click(object sender, EventArgs e) {
+      try {
+        SetControlsState(false);
+#if LITEVERSION
+        MessageBox.Show("No Ini file available with TermWrap.", Updater.ApplicationTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+#else
+        if (!File.Exists(wrapperIniLastPath)) {
+          MessageBox.Show($"File '{wrapperIniLastPath}' not found.", Updater.ApplicationTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        Process.Start(new ProcessStartInfo {
+          FileName = wrapperIniLastPath,
+          UseShellExecute = true
+        });
+#endif
+      }
+      finally {
+        SetControlsState(true);
+      }
+    }
+
     private void AddToLog(string message, Logger.StateKind state, bool newLine) {
       if (InvokeRequired) {
         Invoke(new Action<string, Logger.StateKind, bool>(AddToLog), message, state);
@@ -603,7 +624,7 @@ namespace rdpWrapper {
       refreshTimer.Enabled = enabled;
       if (!enabled) {
         btnInstall.Enabled = installMenuItem.Enabled = uninstallMenuItem.Enabled = enabled;
-        btnGenerate.Enabled = generateMenuItem.Enabled = enabled;
+        editWrapIniMenuItem.Enabled = btnGenerate.Enabled = generateMenuItem.Enabled = enabled;
       }
       btnRestartService.Enabled = restartServiceMenuItem.Enabled = enabled;
     }
