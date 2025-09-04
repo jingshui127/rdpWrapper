@@ -77,8 +77,9 @@ Currently, Defender does not flag this release, but it is likely that future upd
 RdpWrapper can add this exception automatically only for Defender, but if it does not, you can do it manually
 
 For Defender, you can run the following script in PowerShell as an administrator:
-`Add-MpPreference -ExclusionPath "c:\Program Files\RDP Wrapper\"`
-
+```powershell
+Add-MpPreference -ExclusionPath "c:\Program Files\RDP Wrapper\"
+```
 
 > [!CAUTION]
 > If your antivirus deletes the downloaded app file, you may need to temporarily disable real-time protection or save the file in an excluded folder.
