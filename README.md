@@ -3,7 +3,8 @@
 [![Downloads](https://img.shields.io/github/downloads/rdp-wrapper/rdpWrapper/total?color=ff4f42)](https://sergiye.github.io/github-release-stats/?username=rdp-wrapper&repository=rdpWrapper&page=1&per_page=100)
 ![Last commit](https://img.shields.io/github/last-commit/rdp-wrapper/rdpWrapper?color=00AD00)
 
-![Environment](https://img.shields.io/badge/Windows-7,%2010,%2011-brightgreen.svg)
+[![](https://img.shields.io/badge/WINDOWS-7%20%E2%80%93%2011-blue)](https://endoflife.date/windows)
+[![](https://img.shields.io/badge/SERVER-2012%20%E2%80%93%202025-blue)](https://endoflife.date/windows-server)
 ![license](https://img.shields.io/github/license/rdp-wrapper/rdpWrapper)
 
 ----
