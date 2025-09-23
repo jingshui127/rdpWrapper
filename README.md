@@ -41,6 +41,21 @@ The application is portable and has the following features:
  - Console and RDP session shadowing (using [Task Manager in Windows 7](http://cdn.freshdesk.com/data/helpdesk/attachments/production/1009641577/original/remote_control.png?1413476051) and lower, and [Remote Desktop Connection in Windows 8](http://woshub.com/rds-shadow-how-to-connect-to-a-user-session-in-windows-server-2012-r2/) and higher)
  - Windows 2000, XP and Server 2003 are not supported
 
+ #### Additional application features
+
+  - auto-update application to the latest version
+  - open 'wrap.ini' in editor
+  - console mode with file output (#16)
+  - choose where to store settings: file or registry
+  - optionally add Defender exclusion
+  - optionally add firewall rule when RDP port changed
+  - create a user and add to rdp group
+  - open user management (new/old style)
+  - check if Microsoft Visual C++ 2015-2022 Redistributable is installed
+  - fix Microsoft account local cache (#10)
+
+  and you can get full/lite/x64/x86 version of the application - the one that best suits your needs
+
 ### What does it look like?
 
 Here's a preview of the app's UI running on Windows 10:
