@@ -45,14 +45,14 @@ The application is portable and has the following features:
 
   - auto-update application to the latest version
   - open 'wrap.ini' in editor
-  - console mode with file output (#16)
+  - console mode with file output ([#16](https://github.com/rdp-wrapper/rdpWrapper/issues/16))
   - choose where to store settings: file or registry
-  - optionally add Defender exclusion
+  - optionally add Defender exclusion ([#6](https://github.com/rdp-wrapper/rdpWrapper/issues/6))
   - optionally add firewall rule when RDP port changed
-  - create a user and add to rdp group
+  - create a user and add to rdp group ([#9](https://github.com/rdp-wrapper/rdpWrapper/issues/9))
   - open user management (new/old style)
-  - check if Microsoft Visual C++ 2015-2022 Redistributable is installed
-  - fix Microsoft account local cache (#10)
+  - check if Microsoft Visual C++ 2015-2022 Redistributable is installed ([#7](https://github.com/rdp-wrapper/rdpWrapper/issues/7))
+  - fix Microsoft account local cache ([#10](https://github.com/rdp-wrapper/rdpWrapper/issues/10))
 
   and you can get full/lite/x64/x86 version of the application - the one that best suits your needs
 
