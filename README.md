@@ -124,13 +124,15 @@ HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\
 The rdpWrapper team welcomes feedback and contributions!<br/>
 You can check if it works properly on your PC. If you notice any inaccuracies, please send us a pull request. If you have any suggestions or improvements, don't hesitate to create an issue.
 
-Also, don't forget to star the repository to help other people find it.
+Also, don't forget to ★ star ★ the repository to help other people find it.
 
 [![Star History Chart](https://api.star-history.com/svg?repos=rdp-wrapper/rdpwrapper&type=Date)](https://star-history.com/#rdp-wrapper/rdpwrapper&Date)
 
 [//]: # ([![Stargazers over time]&#40;https://starchart.cc/rdp-wrapper/rdpwrapper.svg?variant=adaptive&#41;]&#40;https://starchart.cc/rdp-wrapper/rdpwrapper&#41;)
 
-[![Stargazers repo roster for @rdp-wrapper/rdpWrapper](https://reporoster.com/stars/rdp-wrapper/rdpWrapper)](https://github.com/rdp-wrapper/rdpWrapper/stargazers)
+[![Stargazers](https://reporoster.com/stars/rdp-wrapper/rdpWrapper)](https://star-history.com/#rdp-wrapper/rdpWrapper&Date)
+
+[![Forkers](https://reporoster.com/forks/rdp-wrapper/rdpWrapper)](https://github.com/rdp-wrapper/rdpWrapper/network/members)
 
 ## Donate!
 Every [cup of coffee](https://patreon.com/SergiyE) you donate will help this app become better and let me know that this project is in demand.
