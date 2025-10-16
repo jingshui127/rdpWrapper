@@ -329,7 +329,7 @@ namespace rdpWrapper {
             | System.Windows.Forms.AnchorStyles.Right)));
       this.txtServiceVersion.BorderStyle = System.Windows.Forms.BorderStyle.None;
       this.txtServiceVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-      this.txtServiceVersion.Location = new System.Drawing.Point(180, 21);
+      this.txtServiceVersion.Location = new System.Drawing.Point(150, 21);
       this.txtServiceVersion.Name = "txtServiceVersion";
       this.txtServiceVersion.ReadOnly = true;
       this.txtServiceVersion.Size = new System.Drawing.Size(113, 13);
@@ -341,7 +341,7 @@ namespace rdpWrapper {
       this.lblSupported.AutoSize = true;
       this.lblSupported.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
       this.lblSupported.ForeColor = System.Drawing.Color.Red;
-      this.lblSupported.Location = new System.Drawing.Point(180, 64);
+      this.lblSupported.Location = new System.Drawing.Point(150, 64);
       this.lblSupported.Name = "lblSupported";
       this.lblSupported.Size = new System.Drawing.Size(93, 13);
       this.lblSupported.TabIndex = 10;
@@ -352,7 +352,7 @@ namespace rdpWrapper {
       this.lblListenerStateValue.AutoSize = true;
       this.lblListenerStateValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
       this.lblListenerStateValue.ForeColor = System.Drawing.Color.Red;
-      this.lblListenerStateValue.Location = new System.Drawing.Point(100, 64);
+      this.lblListenerStateValue.Location = new System.Drawing.Point(60, 64);
       this.lblListenerStateValue.Name = "lblListenerStateValue";
       this.lblListenerStateValue.Size = new System.Drawing.Size(60, 13);
       this.lblListenerStateValue.TabIndex = 9;
@@ -363,7 +363,7 @@ namespace rdpWrapper {
       this.lblServiceStateValue.AutoSize = true;
       this.lblServiceStateValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
       this.lblServiceStateValue.ForeColor = System.Drawing.Color.Red;
-      this.lblServiceStateValue.Location = new System.Drawing.Point(100, 21);
+      this.lblServiceStateValue.Location = new System.Drawing.Point(60, 21);
       this.lblServiceStateValue.Name = "lblServiceStateValue";
       this.lblServiceStateValue.Size = new System.Drawing.Size(60, 13);
       this.lblServiceStateValue.TabIndex = 1;
@@ -373,7 +373,7 @@ namespace rdpWrapper {
       // 
       this.lblWrapperVersion.AutoSize = true;
       this.lblWrapperVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-      this.lblWrapperVersion.Location = new System.Drawing.Point(180, 42);
+      this.lblWrapperVersion.Location = new System.Drawing.Point(150, 42);
       this.lblWrapperVersion.Name = "lblWrapperVersion";
       this.lblWrapperVersion.Size = new System.Drawing.Size(47, 13);
       this.lblWrapperVersion.TabIndex = 6;
@@ -384,7 +384,7 @@ namespace rdpWrapper {
       this.lblWrapperStateValue.AutoSize = true;
       this.lblWrapperStateValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
       this.lblWrapperStateValue.ForeColor = System.Drawing.Color.Red;
-      this.lblWrapperStateValue.Location = new System.Drawing.Point(100, 42);
+      this.lblWrapperStateValue.Location = new System.Drawing.Point(60, 42);
       this.lblWrapperStateValue.Name = "lblWrapperStateValue";
       this.lblWrapperStateValue.Size = new System.Drawing.Size(60, 13);
       this.lblWrapperStateValue.TabIndex = 5;
@@ -395,27 +395,27 @@ namespace rdpWrapper {
       this.lblListenerState.AutoSize = true;
       this.lblListenerState.Location = new System.Drawing.Point(8, 64);
       this.lblListenerState.Name = "lblListenerState";
-      this.lblListenerState.Size = new System.Drawing.Size(73, 13);
+      this.lblListenerState.Size = new System.Drawing.Size(50, 13);
       this.lblListenerState.TabIndex = 8;
-      this.lblListenerState.Text = "Listener state:";
+      this.lblListenerState.Text = "Listener:";
       // 
       // lblServiceState
       // 
       this.lblServiceState.AutoSize = true;
       this.lblServiceState.Location = new System.Drawing.Point(8, 21);
       this.lblServiceState.Name = "lblServiceState";
-      this.lblServiceState.Size = new System.Drawing.Size(72, 13);
+      this.lblServiceState.Size = new System.Drawing.Size(50, 13);
       this.lblServiceState.TabIndex = 0;
-      this.lblServiceState.Text = "Service state:";
+      this.lblServiceState.Text = "Service:";
       // 
       // lblWrapperState
       // 
       this.lblWrapperState.AutoSize = true;
       this.lblWrapperState.Location = new System.Drawing.Point(8, 42);
       this.lblWrapperState.Name = "lblWrapperState";
-      this.lblWrapperState.Size = new System.Drawing.Size(77, 13);
+      this.lblWrapperState.Size = new System.Drawing.Size(50, 13);
       this.lblWrapperState.TabIndex = 4;
-      this.lblWrapperState.Text = "Wrapper state:";
+      this.lblWrapperState.Text = "Wrapper:";
       // 
       // mainMenu
       // 
@@ -435,6 +435,7 @@ namespace rdpWrapper {
       // 
       this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.testToolStripMenuItem,
+            this.editWrapIniMenuItem,
             this.toolStripMenuItem2,
             this.exitToolStripMenuItem});
       this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -469,7 +470,6 @@ namespace rdpWrapper {
             this.uninstallMenuItem,
             this.restartServiceMenuItem,
             this.generateMenuItem,
-            this.editWrapIniMenuItem,
             this.toolStripMenuItem3,
             this.addUserToolStripMenuItem,
             this.fixMSUserMenuItem,
