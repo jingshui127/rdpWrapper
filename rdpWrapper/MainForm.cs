@@ -43,19 +43,11 @@ namespace rdpWrapper {
 
       var sizeSpan = Height - ClientSize.Height;
       MinimumSize = new Size { Width = Width, Height = sizeSpan + gbxGeneralSettings.Height + gbxStatus.Height + mainMenu.Height };
-
+      SetLogVisible(false);
+      
       var showLog = new UserOption("showLog", true, showLogToolStripMenuItem, settings);
       showLog.Changed += delegate {
-        if (showLogToolStripMenuItem.Checked) {
-          FormBorderStyle = FormBorderStyle.Sizable;
-          txtLog.Visible = true;
-          Height = sizeSpan + gbxGeneralSettings.Height + gbxStatus.Height + 100 + mainMenu.Height;
-        }
-        else {
-          FormBorderStyle = FormBorderStyle.FixedDialog;
-          Height = sizeSpan + gbxGeneralSettings.Height + gbxStatus.Height + mainMenu.Height;
-          txtLog.Visible = false;
-        }
+        SetLogVisible(showLogToolStripMenuItem.Checked);
       };
       var portable = new UserOption("portable", true, storeSeiingsInFileToolStripMenuItem, settings);
       portable.Changed += delegate {
@@ -69,7 +61,7 @@ namespace rdpWrapper {
         preferredWrapper = SupportedWrappers.TermWrap;
       }
       foreach (SupportedWrappers wrap in Enum.GetValues(typeof(SupportedWrappers))) {
-        var menuItem = new ToolStripRadioButtonMenuItem(wrap.ToString(), null, (sender, e) => {
+        var menuItem = new ToolStripRadioButtonMenuItem(wrap.ToString(), null, (sender, _) => {
           if (sender is not ToolStripRadioButtonMenuItem menuItem || !Enum.TryParse(menuItem.Text, out preferredWrapper))
             return;
           settings.SetValue("preferredWrapper", preferredWrapper.ToString());
@@ -103,22 +95,22 @@ namespace rdpWrapper {
       refreshTimer.Tick += TimerTick;
       refreshTimer.Interval = 1000;
 
-      Load += (sender, e) => { 
+      Load += (_, _) => { 
         RefreshSystemSettings();
         TimerTick(null, EventArgs.Empty);
         refreshTimer.Enabled = true;
 
-        cbxSingleSessionPerUser.CheckedChanged += (s, e) => { wrapper.SingleSessionPerUser = cbxSingleSessionPerUser.Checked; };
-        cbxAllowTSConnections.CheckedChanged += (s, e) => { wrapper.AllowTsConnections = cbxAllowTSConnections.Checked; };
-        cbDontDisplayLastUser.CheckedChanged += (s, e) => { wrapper.DontDisplayLastUser = cbDontDisplayLastUser.Checked; };
-        rgShadowOptions.SelectedIndexChanged += (s, e) => { wrapper.ShadowOptions = rgShadowOptions.SelectedIndex; };
-        cbxHonorLegacy.CheckedChanged += (s, e) => { wrapper.HonorLegacy = cbxHonorLegacy.Checked; };
-        cbxAllowPlaybackRedirect.CheckedChanged += (s, e) => { wrapper.AllowHostPlaybackRedirect = cbxAllowPlaybackRedirect.Checked; };
-        cbxAllowAudioCapture.CheckedChanged += (s, e) => { wrapper.AllowClientAudioCapture = cbxAllowAudioCapture.Checked; };
-        cbxAllowVideoCapture.CheckedChanged += (s, e) => { wrapper.AllowClientVideoCapture = cbxAllowVideoCapture.Checked; };
-        cbxAllowPnp.CheckedChanged += (s, e) => { wrapper.AllowPnpRedirect = cbxAllowPnp.Checked; };
+        cbxSingleSessionPerUser.CheckedChanged += (_, _) => { wrapper.SingleSessionPerUser = cbxSingleSessionPerUser.Checked; };
+        cbxAllowTSConnections.CheckedChanged += (_, _) => { wrapper.AllowTsConnections = cbxAllowTSConnections.Checked; };
+        cbDontDisplayLastUser.CheckedChanged += (_, _) => { wrapper.DontDisplayLastUser = cbDontDisplayLastUser.Checked; };
+        rgShadowOptions.SelectedIndexChanged += (_, _) => { wrapper.ShadowOptions = rgShadowOptions.SelectedIndex; };
+        cbxHonorLegacy.CheckedChanged += (_, _) => { wrapper.HonorLegacy = cbxHonorLegacy.Checked; };
+        cbxAllowPlaybackRedirect.CheckedChanged += (_, _) => { wrapper.AllowHostPlaybackRedirect = cbxAllowPlaybackRedirect.Checked; };
+        cbxAllowAudioCapture.CheckedChanged += (_, _) => { wrapper.AllowClientAudioCapture = cbxAllowAudioCapture.Checked; };
+        cbxAllowVideoCapture.CheckedChanged += (_, _) => { wrapper.AllowClientVideoCapture = cbxAllowVideoCapture.Checked; };
+        cbxAllowPnp.CheckedChanged += (_, _) => { wrapper.AllowPnpRedirect = cbxAllowPnp.Checked; };
 
-        numRDPPort.ValueChanged += (s, e) => {
+        numRDPPort.ValueChanged += (_, _) => {
           var newPort = (int)numRDPPort.Value;
           if (oldPort != newPort) {
             if (setFirewallRule.Value) {
@@ -158,11 +150,11 @@ namespace rdpWrapper {
             oldPort = wrapper.RdpPort = newPort;
           }
         };
-        numMaxConnections.ValueChanged += (s, e) => {
+        numMaxConnections.ValueChanged += (_, _) => {
           wrapper.MaximumConnectionsAllowed = (int)numMaxConnections.Value;
         };
 
-        rgNLAOptions.SelectedIndexChanged += (s, e) => {
+        rgNLAOptions.SelectedIndexChanged += (_, _) => {
           switch (rgNLAOptions.SelectedIndex) {
             case 0:
               wrapper.UserAuthentication = 0;
@@ -182,17 +174,16 @@ namespace rdpWrapper {
 
       Updater.Subscribe(
         (message, isError) => {
-          MessageBox.Show(message, Updater.ApplicationName, MessageBoxButtons.OK, isError ? MessageBoxIcon.Warning : MessageBoxIcon.Information);
+          if (InvokeRequired)
+            Invoke(new Action(() => MessageBox.Show(message, Updater.ApplicationName, MessageBoxButtons.OK, isError ? MessageBoxIcon.Warning : MessageBoxIcon.Information)));
+          else
+            MessageBox.Show(message, Updater.ApplicationName, MessageBoxButtons.OK, isError ? MessageBoxIcon.Warning : MessageBoxIcon.Information);
         },
-        (message) => {
-          return MessageBox.Show(message, Updater.ApplicationName, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK;
-        },
+        message => InvokeRequired
+          ? (bool)Invoke(new Func<bool>(() => MessageBox.Show(this, message, Updater.ApplicationName, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK))
+          : MessageBox.Show(this, message, Updater.ApplicationName, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK,
         () => { btnClose_Click(null, EventArgs.Empty); }
       );
-
-      var timer = new System.Threading.Timer((_) => {
-        Updater.CheckForUpdates(Updater.CheckUpdatesMode.AutoUpdate);
-      }, null, 10 * 1000, 1000 * 60 * 60 * 24);
     }
 
     protected override void WndProc(ref Message m) {
@@ -209,6 +200,20 @@ namespace rdpWrapper {
       }
     }
 
+    private void SetLogVisible(bool visible) {
+      var sizeSpan = Height - ClientSize.Height;
+      if (visible) {
+        FormBorderStyle = FormBorderStyle.Sizable;
+        txtLog.Visible = true;
+        Height = sizeSpan + gbxGeneralSettings.Height + gbxStatus.Height + 100 + mainMenu.Height;
+      }
+      else {
+        FormBorderStyle = FormBorderStyle.FixedDialog;
+        Height = sizeSpan + gbxGeneralSettings.Height + gbxStatus.Height + mainMenu.Height;
+        txtLog.Visible = false;
+      }
+    }
+    
     private void checkFoNewVersionToolStripMenuItem_Click(object sender, EventArgs e) {
       Updater.CheckForUpdates(Updater.CheckUpdatesMode.AllMessages);
     }
@@ -623,8 +628,8 @@ namespace rdpWrapper {
     private void SetControlsState(bool enabled) {
       refreshTimer.Enabled = enabled;
       if (!enabled) {
-        btnInstall.Enabled = installMenuItem.Enabled = uninstallMenuItem.Enabled = enabled;
-        editWrapIniMenuItem.Enabled = btnGenerate.Enabled = generateMenuItem.Enabled = enabled;
+        btnInstall.Enabled = installMenuItem.Enabled = uninstallMenuItem.Enabled = false;
+        editWrapIniMenuItem.Enabled = btnGenerate.Enabled = generateMenuItem.Enabled = false;
       }
       btnRestartService.Enabled = restartServiceMenuItem.Enabled = enabled;
     }
