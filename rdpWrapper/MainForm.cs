@@ -43,12 +43,12 @@ namespace rdpWrapper {
 
       var sizeSpan = Height - ClientSize.Height;
       MinimumSize = new Size { Width = Width, Height = sizeSpan + gbxGeneralSettings.Height + gbxStatus.Height + mainMenu.Height };
-      SetLogVisible(false);
       
       var showLog = new UserOption("showLog", true, showLogToolStripMenuItem, settings);
       showLog.Changed += delegate {
         SetLogVisible(showLogToolStripMenuItem.Checked);
       };
+      SetLogVisible(showLog.Value);
       var portable = new UserOption("portable", true, storeSeiingsInFileToolStripMenuItem, settings);
       portable.Changed += delegate {
         settings.IsPortable = portable.Value;
