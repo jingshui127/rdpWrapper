@@ -270,6 +270,7 @@ namespace rdpWrapper {
 
     private void InitializeTheme() {
 
+      ToolStripRadioButtonMenuItem.DisplayAsCheckboxes = true;
       mainMenu.Renderer = new ThemedToolStripRenderer();
 
       var currentItem = CustomTheme.FillThemesMenu((title, theme, onClick) => {
