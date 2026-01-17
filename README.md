@@ -5,7 +5,6 @@
 
 [![](https://img.shields.io/badge/WINDOWS-7%20%E2%80%93%2011-blue)](https://endoflife.date/windows)
 [![](https://img.shields.io/badge/SERVER-2012%20%E2%80%93%202025-blue)](https://endoflife.date/windows-server)
-![license](https://img.shields.io/github/license/sergiye/rdpWrapper)
 
 ----
 
