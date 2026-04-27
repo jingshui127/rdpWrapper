@@ -104,7 +104,7 @@ namespace rdpWrapper {
         cbxSingleSessionPerUser.CheckedChanged += (_, _) => { wrapper.SingleSessionPerUser = cbxSingleSessionPerUser.Checked; };
         cbxAllowTSConnections.CheckedChanged += (_, _) => { wrapper.AllowTsConnections = cbxAllowTSConnections.Checked; };
         cbDontDisplayLastUser.CheckedChanged += (_, _) => { wrapper.DontDisplayLastUser = cbDontDisplayLastUser.Checked; };
-        cbxDontDisplaySecurityWarning.CheckedChanged += (_, _) => { wrapper.DontDisplaySecurityWarning = cbxDontDisplaySecurityWarning.Checked; };
+        cbxDisableSecurityWarning.CheckedChanged += (_, _) => { wrapper.DisableSecurityWarning = cbxDisableSecurityWarning.Checked; };
         cbxRestrictClientUsbRedirection.CheckedChanged += (_, _) => { wrapper.RestrictUsbRedirection = cbxRestrictClientUsbRedirection.Checked; };
         rgShadowOptions.SelectedIndexChanged += (_, _) => { wrapper.ShadowOptions = rgShadowOptions.SelectedIndex; };
         cbxHonorLegacy.CheckedChanged += (_, _) => { wrapper.HonorLegacy = cbxHonorLegacy.Checked; };
@@ -253,7 +253,7 @@ namespace rdpWrapper {
 
         rgShadowOptions.SelectedIndex = wrapper.ShadowOptions;
         cbDontDisplayLastUser.Checked = wrapper.DontDisplayLastUser;
-        cbxDontDisplaySecurityWarning.Checked = wrapper.DontDisplaySecurityWarning;
+        cbxDisableSecurityWarning.Checked = wrapper.DisableSecurityWarning;
         cbxRestrictClientUsbRedirection.Checked = wrapper.RestrictUsbRedirection.Value;
         cbxAllowPlaybackRedirect.Checked = wrapper.AllowHostPlaybackRedirect;
         cbxAllowAudioCapture.Checked = wrapper.AllowClientAudioCapture;

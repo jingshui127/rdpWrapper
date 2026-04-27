@@ -334,7 +334,7 @@ namespace rdpWrapper {
       }
     }
 
-    internal bool DontDisplaySecurityWarning {
+    internal bool DisableSecurityWarning {
       get {
         using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
         using (var key = baseKey.OpenSubKey(RegTsKey + "\\Client"))

@@ -29,7 +29,7 @@ namespace rdpWrapper {
       this.btnRestartService = new System.Windows.Forms.Button();
       this.gbxGeneralSettings = new System.Windows.Forms.GroupBox();
       this.cbxRestrictClientUsbRedirection = new System.Windows.Forms.CheckBox();
-      this.cbxDontDisplaySecurityWarning = new System.Windows.Forms.CheckBox();
+      this.cbxDisableSecurityWarning = new System.Windows.Forms.CheckBox();
       this.lblMaxConnections = new System.Windows.Forms.Label();
       this.numMaxConnections = new System.Windows.Forms.NumericUpDown();
       this.cbxAllowAudioCapture = new System.Windows.Forms.CheckBox();
@@ -184,7 +184,7 @@ namespace rdpWrapper {
       // gbxGeneralSettings
       // 
       this.gbxGeneralSettings.Controls.Add(this.cbxRestrictClientUsbRedirection);
-      this.gbxGeneralSettings.Controls.Add(this.cbxDontDisplaySecurityWarning);
+      this.gbxGeneralSettings.Controls.Add(this.cbxDisableSecurityWarning);
       this.gbxGeneralSettings.Controls.Add(this.lblMaxConnections);
       this.gbxGeneralSettings.Controls.Add(this.numMaxConnections);
       this.gbxGeneralSettings.Controls.Add(this.cbxAllowAudioCapture);
@@ -204,7 +204,7 @@ namespace rdpWrapper {
       this.gbxGeneralSettings.Dock = System.Windows.Forms.DockStyle.Top;
       this.gbxGeneralSettings.Location = new System.Drawing.Point(0, 109);
       this.gbxGeneralSettings.Name = "gbxGeneralSettings";
-      this.gbxGeneralSettings.Size = new System.Drawing.Size(372, 176);
+      this.gbxGeneralSettings.Size = new System.Drawing.Size(372, 178);
       this.gbxGeneralSettings.TabIndex = 2;
       this.gbxGeneralSettings.TabStop = false;
       this.gbxGeneralSettings.Text = "General settings";
@@ -220,12 +220,12 @@ namespace rdpWrapper {
       // 
       // cbxDontDisplayWarning
       // 
-      this.cbxDontDisplaySecurityWarning.AutoSize = true;
-      this.cbxDontDisplaySecurityWarning.Location = new System.Drawing.Point(183, 140);
-      this.cbxDontDisplaySecurityWarning.Name = "cbxDontDisplayWarning";
-      this.cbxDontDisplaySecurityWarning.Size = new System.Drawing.Size(192, 17);
-      this.cbxDontDisplaySecurityWarning.TabIndex = 16;
-      this.cbxDontDisplaySecurityWarning.Text = "Do not display client security warning";
+      this.cbxDisableSecurityWarning.AutoSize = true;
+      this.cbxDisableSecurityWarning.Location = new System.Drawing.Point(183, 140);
+      this.cbxDisableSecurityWarning.Name = "cbxDontDisplayWarning";
+      this.cbxDisableSecurityWarning.Size = new System.Drawing.Size(192, 17);
+      this.cbxDisableSecurityWarning.TabIndex = 16;
+      this.cbxDisableSecurityWarning.Text = "Disable client security warning";
       // 
       // lblMaxConnections
       // 
@@ -774,7 +774,7 @@ namespace rdpWrapper {
     private ToolStripSeparator toolStripMenuItem4;
     private Label lblMaxConnections;
     private NumericUpDown numMaxConnections;
-    private CheckBox cbxDontDisplaySecurityWarning;
+    private CheckBox cbxDisableSecurityWarning;
     private CheckBox cbxRestrictClientUsbRedirection;
   }
 }
