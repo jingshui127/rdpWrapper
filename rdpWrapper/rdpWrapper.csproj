@@ -19,6 +19,7 @@
     <AssemblyName>rdpWrapper</AssemblyName>
     <OutputPath>bin\</OutputPath>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <AssemblyName>rdpWrapper_x64</AssemblyName>
