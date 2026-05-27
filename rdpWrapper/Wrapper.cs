@@ -13,7 +13,7 @@ using sergiye.Common;
 
 namespace rdpWrapper {
 
-  internal enum WrapperInstalledState {
+  public enum WrapperInstalledState {
     Unknown,
     NotInstalled,
     ThirdParty,
@@ -21,14 +21,14 @@ namespace rdpWrapper {
     TermWrap,
   }
 
-  internal enum SupportedWrappers {
+  public enum SupportedWrappers {
     TermWrap = 0,
 #if !LITEVERSION
     RdpWrap = 1,
 #endif
   }
 
-  internal class Wrapper {
+  public class Wrapper {
 
     private const string RegKey = @"SYSTEM\CurrentControlSet\Control\Terminal Server";
     private const string RegTermServiceKey = @"SYSTEM\CurrentControlSet\Services\TermService";
@@ -52,7 +52,7 @@ namespace rdpWrapper {
     private const string ValueRedirectionWarningDialogVersion = "RedirectionWarningDialogVersion";
 
     private const string RdpServiceName = "TermService";
-    
+
     internal const string RdpWrapIniName = "rdpwrap.ini";
     private const string RdpWrapDllName = "rdpwrap.dll";
     private const string TermSrvName = "termsrv.dll";
@@ -81,7 +81,7 @@ namespace rdpWrapper {
       }
     }
 
-    internal bool SingleSessionPerUser { 
+    internal bool SingleSessionPerUser {
       get {
         var result = false;
         using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView)) {
@@ -102,7 +102,7 @@ namespace rdpWrapper {
       }
     }
 
-    internal int MaximumConnectionsAllowed { 
+    internal int MaximumConnectionsAllowed {
       get {
         using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView)) {
           using (var key = baseKey.OpenSubKey(RegRdpKey)) {
@@ -397,21 +397,21 @@ namespace rdpWrapper {
         return WrapperInstalledState.Unknown;
       }
     }
- 
+
     internal static string GetVersionString(FileVersionInfo versionInfo) {
       return versionInfo.ProductMajorPart + "." + versionInfo.ProductMinorPart + "." + versionInfo.ProductBuildPart + "." + versionInfo.ProductPrivatePart;
     }
 
     #region Service wrapper
-    
+
     internal void StopService(TimeSpan timeout) {
       serviceHelper.StopService(RdpServiceName, timeout);
     }
-    
+
     internal void StartService(TimeSpan timeout) {
       serviceHelper.StartService(RdpServiceName, timeout);
     }
-    
+
     internal ServiceControllerStatus? GetServiceState() {
       return serviceHelper.GetServiceState(RdpServiceName);
     }
@@ -450,7 +450,7 @@ namespace rdpWrapper {
       }
 
       if (string.IsNullOrEmpty(iniFile) || !File.Exists(iniFile)) return;
-      
+
       try {
         serviceHelper.StopService(RdpServiceName, TimeSpan.FromSeconds(10));
 
@@ -543,7 +543,7 @@ namespace rdpWrapper {
         }
       }
       logger.Log(" Done", Logger.StateKind.Info, false);
-      var serviceState = serviceHelper.GetServiceState(RdpServiceName); 
+      var serviceState = serviceHelper.GetServiceState(RdpServiceName);
       if (serviceState is ServiceControllerStatus.Running) {
         serviceHelper.StopService(RdpServiceName, TimeSpan.FromSeconds(10));
       }
@@ -610,7 +610,7 @@ namespace rdpWrapper {
       try {
         var type = GetType();
         resourceName += ".cr";
-        var scriptsPath = archPrefix 
+        var scriptsPath = archPrefix
           ? $"{type.Namespace}.externals.{(Environment.Is64BitOperatingSystem ? "x64" : "x86")}.{resourceName}"
           : $"{type.Namespace}.externals.{resourceName}";
         using var stream = type.Assembly.GetManifestResourceStream(scriptsPath);
@@ -652,7 +652,7 @@ namespace rdpWrapper {
       p.Start();
       return p;
     }
- 
+
     private static void AddDirectorySecurity(string fileName, string[] sids, FileSystemRights rights, AccessControlType controlType) {
       var dInfo = new DirectoryInfo(fileName);
       var dSecurity = dInfo.GetAccessControl();
