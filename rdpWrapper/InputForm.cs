@@ -4,16 +4,16 @@ using System.Windows.Forms;
 
 namespace rdpWrapper {
 
-  public partial class InputForm : Form {
+  internal partial class InputForm : Form {
 
-    public InputForm() {
+    private InputForm() {
       InitializeComponent();
       Icon = Icon.ExtractAssociatedIcon(typeof(MainForm).Assembly.Location);
 
       txtInput.TextChanged += (s, e) => btnOk.Enabled = !string.IsNullOrEmpty(txtInput.Text);
     }
 
-    public static DialogResult GetValue(string title, string promptText, out string input) {
+    internal static DialogResult GetValue(string title, string promptText, out string input) {
 
       var form = new InputForm();
       form.lblText.Text = promptText;
