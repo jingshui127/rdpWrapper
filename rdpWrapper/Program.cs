@@ -46,7 +46,7 @@ namespace rdpWrapper {
         logger.Log($"{Updater.ApplicationTitle} {typeof(Program).Assembly.GetName().Version.ToString(3)} {(Environment.Is64BitProcess ? "x64" : "x32")}", Logger.StateKind.Info);
       }
 
-      if (!OperatingSystemHelper.IsCompatible(true, out var errorMessage, out var fixAction)) {
+      if (!OSHelper.IsCompatible(true, out var errorMessage, out var fixAction)) {
         if (consoleMode) {
           logger.Log(errorMessage, Logger.StateKind.Error);
         }
@@ -68,19 +68,6 @@ namespace rdpWrapper {
         MessageBox.Show($"{Updater.ApplicationName} is already running.", Updater.ApplicationName,
           MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         return;
-      }
-
-
-      if (Environment.Is64BitOperatingSystem != Environment.Is64BitProcess) {
-        if (consoleMode) {
-          logger.Log($"You are running an application build made for a different OS architecture.\nIt is not compatible!", Logger.StateKind.Error);
-        }
-        else {
-          if (MessageBox.Show($"You are running an application build made for a different OS architecture.\nIt is not compatible!\nWould you like to download correct version?", Updater.ApplicationName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes) {
-            Updater.VisitAppSite("releases");
-          }
-        }
-        Environment.Exit(0);
       }
 
       if (consoleMode) {

@@ -361,7 +361,7 @@ namespace rdpWrapper {
             if (serviceKey == null)
               return WrapperInstalledState.Unknown;
             var termServiceHost = serviceKey.GetValue("ImagePath") as string;
-            if (string.IsNullOrWhiteSpace(termServiceHost) || !termServiceHost.ToLower().Contains("svchost.exe"))
+            if (termServiceHost.IsNullOrWhiteSpace() || !termServiceHost.ToLower().Contains("svchost.exe"))
               return WrapperInstalledState.ThirdParty;
           }
 
@@ -371,7 +371,7 @@ namespace rdpWrapper {
               return WrapperInstalledState.Unknown;
 
             termServicePath = paramKey.GetValue("ServiceDll") as string;
-            if (string.IsNullOrWhiteSpace(termServicePath))
+            if (termServicePath.IsNullOrWhiteSpace())
               return WrapperInstalledState.Unknown;
           }
 
@@ -406,15 +406,15 @@ namespace rdpWrapper {
     #region Service wrapper
 
     internal void StopService(TimeSpan timeout) {
-      serviceHelper.StopService(RdpServiceName, timeout);
+      serviceHelper.Stop(RdpServiceName, timeout);
     }
 
     internal void StartService(TimeSpan timeout) {
-      serviceHelper.StartService(RdpServiceName, timeout);
+      serviceHelper.Start(RdpServiceName, timeout);
     }
 
     internal ServiceControllerStatus? GetServiceState() {
-      return serviceHelper.GetServiceState(RdpServiceName);
+      return serviceHelper.GetState(RdpServiceName);
     }
 
     #endregion
@@ -450,15 +450,15 @@ namespace rdpWrapper {
         }
       }
 
-      if (string.IsNullOrEmpty(iniFile) || !File.Exists(iniFile)) return;
+      if (iniFile.IsNullOrEmpty() || !File.Exists(iniFile)) return;
 
       try {
-        serviceHelper.StopService(RdpServiceName, TimeSpan.FromSeconds(10));
+        serviceHelper.Stop(RdpServiceName, TimeSpan.FromSeconds(10));
 
         SafeDeleteFile(destFilePath);
         File.Move(iniFile, destFilePath);
 
-        serviceHelper.StartService(RdpServiceName, TimeSpan.FromSeconds(10));
+        serviceHelper.Start(RdpServiceName, TimeSpan.FromSeconds(10));
       }
       catch (Exception ex) {
         var message = "Failed to update config: " + ex.Message;
@@ -470,9 +470,9 @@ namespace rdpWrapper {
 
     internal void Install(SupportedWrappers wrapToInstall, bool addDefenderExclusion) {
       //Uninstall();
-      var prevServiceState = serviceHelper.GetServiceState(RdpServiceName);
+      var prevServiceState = serviceHelper.GetState(RdpServiceName);
       if (prevServiceState is ServiceControllerStatus.Running)
-        serviceHelper.StopService(RdpServiceName, TimeSpan.FromSeconds(10));
+        serviceHelper.Stop(RdpServiceName, TimeSpan.FromSeconds(10));
 
       Directory.CreateDirectory(WrapperFolderPath);
       logger.Log("Folder created: " + WrapperFolderPath);
@@ -529,7 +529,7 @@ namespace rdpWrapper {
 #endif
       logger.Log(" Done", Logger.StateKind.Info, false);
       if (prevServiceState is ServiceControllerStatus.Running)
-        serviceHelper.StartService(RdpServiceName, TimeSpan.FromSeconds(10));
+        serviceHelper.Start(RdpServiceName, TimeSpan.FromSeconds(10));
     }
 
     internal void Uninstall() {
@@ -544,9 +544,9 @@ namespace rdpWrapper {
         }
       }
       logger.Log(" Done", Logger.StateKind.Info, false);
-      var serviceState = serviceHelper.GetServiceState(RdpServiceName);
+      var serviceState = serviceHelper.GetState(RdpServiceName);
       if (serviceState is ServiceControllerStatus.Running) {
-        serviceHelper.StopService(RdpServiceName, TimeSpan.FromSeconds(10));
+        serviceHelper.Stop(RdpServiceName, TimeSpan.FromSeconds(10));
       }
 
       logger.Log("Removed folder: " + WrapperFolderPath);
@@ -560,7 +560,7 @@ namespace rdpWrapper {
         logger.Log(ex.Message, Logger.StateKind.Error); //todo: ignore?
       }
       if (serviceState.HasValue)
-        serviceHelper.StartService(RdpServiceName, TimeSpan.FromSeconds(10));
+        serviceHelper.Start(RdpServiceName, TimeSpan.FromSeconds(10));
     }
 
     #region supplementary methods
@@ -632,7 +632,7 @@ namespace rdpWrapper {
 
     private void SafeDeleteFile(string filePath) {
       try {
-        if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath)) File.Delete(filePath);
+        if (!filePath.IsNullOrEmpty() && File.Exists(filePath)) File.Delete(filePath);
       }
       catch (Exception ex) {
         logger.Log(ex.Message, Logger.StateKind.Error);

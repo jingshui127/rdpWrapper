@@ -20,7 +20,7 @@ namespace rdpWrapper {
     }
 
     public UserPrincipal CreateUserIfNotExist(string userName) {
-      if (string.IsNullOrEmpty(userName))
+      if (userName.IsNullOrEmpty())
         throw new ArgumentException("The username cannot be empty.");
 
       var user = UserPrincipal.FindByIdentity(context, userName);
@@ -44,7 +44,7 @@ namespace rdpWrapper {
 
       if (user == null)
         throw new ArgumentNullException(nameof(user));
-      if (string.IsNullOrEmpty(password))
+      if (password.IsNullOrEmpty())
         throw new ArgumentNullException(nameof(password));
 
       user.SetPassword(password);

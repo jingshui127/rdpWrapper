@@ -241,7 +241,7 @@ namespace rdpWrapper {
         cbxAllowTSConnections.Checked = wrapper.AllowTsConnections;
         cbxHonorLegacy.Checked = wrapper.HonorLegacy;
         numRDPPort.Value = oldPort = wrapper.RdpPort;
-        numMaxConnections.Enabled = OperatingSystemHelper.IsWindowsServer;
+        numMaxConnections.Enabled = OSHelper.IsWindowsServer;
         numMaxConnections.Value = wrapper.MaximumConnectionsAllowed;
         
         rgNLAOptions.SelectedIndex = wrapper.SecurityLayer switch {
@@ -335,7 +335,7 @@ namespace rdpWrapper {
           lblWrapperStateValue.Text = "RdpWrap";
           lblWrapperStateValue.ForeColor = Theme.Current.MessageColor;
           string wrapperIniPath = null;
-          if (!string.IsNullOrEmpty(wrapper.WrapperPath)) {
+          if (!wrapper.WrapperPath.IsNullOrEmpty()) {
             var wrappedDir = Path.GetDirectoryName(wrapper.WrapperPath);
             if (wrappedDir != null) {
               wrapperIniPath = Path.Combine(wrappedDir, Wrapper.RdpWrapIniName);
@@ -411,7 +411,7 @@ namespace rdpWrapper {
         lblListenerStateValue.ForeColor = Theme.Current.WarnColor;
       }
 
-      if (string.IsNullOrEmpty(wrapper.WrapperPath) || !File.Exists(wrapper.WrapperPath)) {
+      if (wrapper.WrapperPath.IsNullOrEmpty() || !File.Exists(wrapper.WrapperPath)) {
         lblWrapperVersion.Text = "N/A";
         lblWrapperVersion.ForeColor = Theme.Current.WarnColor;
       }

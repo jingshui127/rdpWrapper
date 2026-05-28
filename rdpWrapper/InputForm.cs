@@ -10,7 +10,7 @@ namespace rdpWrapper {
       InitializeComponent();
       Icon = Icon.ExtractAssociatedIcon(typeof(MainForm).Assembly.Location);
 
-      txtInput.TextChanged += (s, e) => btnOk.Enabled = !string.IsNullOrEmpty(txtInput.Text);
+      txtInput.TextChanged += (s, e) => btnOk.Enabled = !txtInput.Text.IsNullOrEmpty();
     }
 
     internal static DialogResult GetValue(string title, string promptText, out string input) {
