@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Cryptography;
@@ -13,7 +14,7 @@ using sergiye.Common;
 
 namespace rdpWrapper {
 
-  public enum WrapperInstalledState {
+  internal enum WrapperInstalledState {
     Unknown,
     NotInstalled,
     ThirdParty,
@@ -28,7 +29,7 @@ namespace rdpWrapper {
 #endif
   }
 
-  public class Wrapper {
+  internal class Wrapper {
 
     private const string RegKey = @"SYSTEM\CurrentControlSet\Control\Terminal Server";
     private const string RegTermServiceKey = @"SYSTEM\CurrentControlSet\Services\TermService";
@@ -608,7 +609,7 @@ namespace rdpWrapper {
         SafeDeleteFile(filePath);
       }
       try {
-        var type = GetType();
+        var type = typeof(SupportedWrappers);
         resourceName += ".cr";
         var scriptsPath = archPrefix
           ? $"{type.Namespace}.externals.{(Environment.Is64BitOperatingSystem ? "x64" : "x86")}.{resourceName}"
@@ -625,7 +626,7 @@ namespace rdpWrapper {
       }
       catch (Exception ex) {
         logger.Log(ex.Message, Logger.StateKind.Error);
-        return null;
+        throw;
       }
     }
 
