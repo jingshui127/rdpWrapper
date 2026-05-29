@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Cryptography;
@@ -84,7 +83,7 @@ namespace rdpWrapper {
 
     internal bool SingleSessionPerUser {
       get {
-        var result = false;
+        bool result;
         using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView)) {
           using (var key = baseKey.OpenSubKey(RegKey))
             result = key != null && Convert.ToInt32(key.GetValue(ValueSingleSession, 0)) != 0;
@@ -143,9 +142,7 @@ namespace rdpWrapper {
       get {
         using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
         using (var key = baseKey.OpenSubKey(RegKey))
-        return key != null
-            ? Convert.ToInt32(key.GetValue(ValueDenyTsConnections, 0)) == 0
-            : false;
+          return key != null && Convert.ToInt32(key.GetValue(ValueDenyTsConnections, 0)) == 0;
       }
       set {
         using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
@@ -158,9 +155,7 @@ namespace rdpWrapper {
       get {
         using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
         using (var key = baseKey.OpenSubKey(RegKey))
-          return key != null
-            ? Convert.ToInt32(key.GetValue(ValueHonorLegacy, 0)) != 0
-            : false;
+          return key != null && Convert.ToInt32(key.GetValue(ValueHonorLegacy, 0)) != 0;
       }
       set {
         using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
@@ -236,9 +231,7 @@ namespace rdpWrapper {
       get {
         using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
         using (var key = baseKey.OpenSubKey(RegWinLogonKey))
-          return key != null
-            ? Convert.ToInt32(key.GetValue(ValueDontDisplayLastUserName, 0)) != 0
-            : false;
+          return key != null && Convert.ToInt32(key.GetValue(ValueDontDisplayLastUserName, 0)) != 0;
       }
       set {
         using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
@@ -251,9 +244,7 @@ namespace rdpWrapper {
       get {
         using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
         using (var key = baseKey.OpenSubKey(RegTsKey))
-          return key != null
-            ? Convert.ToInt32(key.GetValue(ValueDisableCam, 1)) == 0
-            : false;
+          return key != null && Convert.ToInt32(key.GetValue(ValueDisableCam, 1)) == 0;
       }
       set {
         using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
@@ -267,9 +258,7 @@ namespace rdpWrapper {
       get {
         using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
         using (var key = baseKey.OpenSubKey(RegTsKey))
-          return key != null
-            ? Convert.ToInt32(key.GetValue(ValueDisableCameraRedir, 1)) == 0
-            : false;
+          return key != null && Convert.ToInt32(key.GetValue(ValueDisableCameraRedir, 1)) == 0;
       }
       set {
         using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
@@ -283,9 +272,7 @@ namespace rdpWrapper {
       get {
         using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
         using (var key = baseKey.OpenSubKey(RegTsKey))
-          return key != null
-            ? Convert.ToInt32(key.GetValue(ValueDisableAudioCapture, 0)) == 0
-            : false;
+          return key != null && Convert.ToInt32(key.GetValue(ValueDisableAudioCapture, 0)) == 0;
       }
       set {
         using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
@@ -299,9 +286,7 @@ namespace rdpWrapper {
       get {
         using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
         using (var key = baseKey.OpenSubKey(RegTsKey))
-          return key != null
-            ? Convert.ToInt32(key.GetValue(ValueDisablePNPRedir, 1)) == 0
-            : false;
+          return key != null && Convert.ToInt32(key.GetValue(ValueDisablePNPRedir, 1)) == 0;
       }
       set {
         using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView)) {
@@ -567,16 +552,17 @@ namespace rdpWrapper {
 
     private Aes GetAes() {
       var aes = Aes.Create();
-      byte[] salt = Encoding.UTF8.GetBytes(Updater.ApplicationTitle);
+      var salt = Encoding.UTF8.GetBytes(Updater.ApplicationTitle);
       using (var keyDerivation = new Rfc2898DeriveBytes(Updater.ApplicationName, salt, 100_000, HashAlgorithmName.SHA256)) {
         aes.Key = keyDerivation.GetBytes(32);
-        aes.IV = keyDerivation.GetBytes(16); ;
+        aes.IV = keyDerivation.GetBytes(16);
       }
       aes.Padding = PaddingMode.PKCS7;
       aes.Mode = CipherMode.CBC;
       return aes;
     }
 
+#if DEBUG
     public void EncryptResources() {
       var externalsPath = Path.Combine(Path.GetDirectoryName(Updater.CurrentFileLocation), "../externals");
       var di = new DirectoryInfo(externalsPath);
@@ -599,6 +585,7 @@ namespace rdpWrapper {
         }
       }
     }
+#endif
 
     private string ExtractResourceFile(string resourceName, string path, bool deleteExisting = false, bool archPrefix = false) {
       var filePath = Path.Combine(path, resourceName);
@@ -639,7 +626,7 @@ namespace rdpWrapper {
       }
     }
 
-    internal static Process StartProcess(string app, string arg, string workingDir = null) {
+    private static Process StartProcess(string app, string arg, string workingDir = null) {
 
       var p = new Process();
       p.StartInfo.UseShellExecute = true;
@@ -673,10 +660,10 @@ namespace rdpWrapper {
           UseShellExecute = false,
           CreateNoWindow = true
         });
-        string output = process.StandardOutput.ReadToEnd();
+        var output = process.StandardOutput.ReadToEnd();
         process.WaitForExit();
         var isActive = output.Trim().Equals("True", StringComparison.OrdinalIgnoreCase);
-        logger.Log("Defender is " + (isActive ? "active" : "not active"), Logger.StateKind.Log);
+        logger.Log("Defender is " + (isActive ? "active" : "not active"));
         return isActive;
       }
       catch (Exception ex) {
@@ -694,10 +681,10 @@ namespace rdpWrapper {
           UseShellExecute = false,
           CreateNoWindow = true
         });
-        string output = process.StandardOutput.ReadToEnd();
+        var output = process.StandardOutput.ReadToEnd();
         process.WaitForExit();
         return output
-            .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+            .Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries)
             .Select(p => p.Trim()).Any(p => string.Equals(p, folderPath, StringComparison.OrdinalIgnoreCase));
       }
       catch (Exception ex) {
@@ -716,24 +703,18 @@ namespace rdpWrapper {
         });
         if (process != null) {
           process.WaitForExit();
-          if (process.ExitCode == 0) {
-            logger.Log("Defender folder exclusion configured", Logger.StateKind.Info);
-            return true;
-          }
-          return false;
+          if (process.ExitCode != 0) return false;
+          logger.Log("Defender folder exclusion configured", Logger.StateKind.Info);
+          return true;
         }
-        else {
-          logger.Log("UAC not confirmed by user.");
-          return false;
-        }
+        logger.Log("UAC not confirmed by user.");
+        return false;
       }
       catch (System.ComponentModel.Win32Exception ex) {
-        if (ex.NativeErrorCode == 1223) {
-          logger.Log("UAC not confirmed by user", Logger.StateKind.Error);
-        }
-        else {
-          logger.Log($"Error starting command: {ex.Message}", Logger.StateKind.Error);
-        }
+        logger.Log(ex.NativeErrorCode == 1223
+            ? "UAC not confirmed by user"
+            : $"Error starting command: {ex.Message}",
+          Logger.StateKind.Error);
         return false;
       }
       catch (Exception ex) {

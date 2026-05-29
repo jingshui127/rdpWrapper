@@ -43,13 +43,13 @@ namespace rdpWrapper {
 
       var sizeSpan = Height - ClientSize.Height;
       MinimumSize = new Size { Width = Width, Height = sizeSpan + gbxGeneralSettings.Height + gbxStatus.Height + mainMenu.Height };
-      
+
       var showLog = new UserOption("showLog", true, showLogToolStripMenuItem, settings);
       showLog.Changed += delegate {
         SetLogVisible(showLogToolStripMenuItem.Checked);
       };
       SetLogVisible(showLog.Value);
-      var portable = new UserOption("portable", true, storeSeiingsInFileToolStripMenuItem, settings);
+      var portable = new UserOption("portable", false, storeSeiingsInFileToolStripMenuItem, settings);
       portable.Changed += delegate {
         settings.IsPortable = portable.Value;
       };
@@ -75,13 +75,13 @@ namespace rdpWrapper {
       logger = new Logger();
       logger.OnNewLogEvent += AddToLog;
       logger.Log($"Application started: {title}", Logger.StateKind.Info, false);
-      
+
       wrapper = new Wrapper(logger);
-      
+
       rgNLAOptions.Items.AddRange([
-        "GUI Authentication Only", 
-        "Default RDP Authentication", 
-        "Network Level Authentication" 
+        "GUI Authentication Only",
+        "Default RDP Authentication",
+        "Network Level Authentication"
       ]);
       rgShadowOptions.Items.AddRange([
         "Disable Shadowing",
@@ -220,7 +220,7 @@ namespace rdpWrapper {
         txtLog.Visible = false;
       }
     }
-    
+
     private void checkFoNewVersionToolStripMenuItem_Click(object sender, EventArgs e) {
       Updater.CheckForUpdates(Updater.CheckUpdatesMode.AllMessages);
     }
@@ -243,7 +243,7 @@ namespace rdpWrapper {
         numRDPPort.Value = oldPort = wrapper.RdpPort;
         numMaxConnections.Enabled = OSHelper.IsWindowsServer;
         numMaxConnections.Value = wrapper.MaximumConnectionsAllowed;
-        
+
         rgNLAOptions.SelectedIndex = wrapper.SecurityLayer switch {
           0 when wrapper.UserAuthentication == 0 => 0,
           1 when wrapper.UserAuthentication == 0 => 1,
@@ -254,7 +254,7 @@ namespace rdpWrapper {
         rgShadowOptions.SelectedIndex = wrapper.ShadowOptions;
         cbDontDisplayLastUser.Checked = wrapper.DontDisplayLastUser;
         cbxDisableSecurityWarning.Checked = wrapper.DisableSecurityWarning;
-        cbxRestrictClientUsbRedirection.Checked = wrapper.RestrictUsbRedirection.Value;
+        cbxRestrictClientUsbRedirection.Checked = wrapper.RestrictUsbRedirection ?? false;
         cbxAllowPlaybackRedirect.Checked = wrapper.AllowHostPlaybackRedirect;
         cbxAllowAudioCapture.Checked = wrapper.AllowClientAudioCapture;
         cbxAllowVideoCapture.Checked = wrapper.AllowClientVideoCapture;
@@ -611,14 +611,14 @@ namespace rdpWrapper {
     }
 
     private void btnInstall_Click(object sender, EventArgs e) {
-      
+
       var operation = btnInstall.Text;
       SetControlsState(false);
       try {
         if (operation == "Install") {
           wrapper.Install(preferredWrapper, addDefenderExclusion.Value);
           if (showAntivirusWarn.Value) {
-            MessageBox.Show($"Wrapper was installed in folder: '{wrapper.WrapperFolderPath}'\nYour antivirus software might block or interfere with wrapper folder.\nPlease verify that it is included in the exclusion list!", Updater.ApplicationTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show($"Wrapper was installed in folder: '{wrapper.WrapperFolderPath}'\nYour antivirus software might block or interfere with wrapper folder.\nPlease verify that it is included in the exclusion list!", Updater.ApplicationTitle, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
           }
         }
         else {
