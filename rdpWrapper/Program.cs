@@ -11,7 +11,7 @@ namespace rdpWrapper {
     private const int CodeException = -1;
     private const int CodeOk = 0;
     private const int CodeInvalidArgs = 1;
-    
+
     //[DllImport("kernel32.dll")]
     //private static extern bool AttachConsole(int dwProcessId);
     //[DllImport("kernel32.dll")]
@@ -23,7 +23,7 @@ namespace rdpWrapper {
     // [DllImport("kernel32.dll")]
     // static extern bool SetConsoleCtrlHandler(ConsoleCtrlDelegate handlerRoutine, bool add);
     // delegate Boolean ConsoleCtrlDelegate(uint ctrlType);
-    
+
     private static int result = CodeOk; //lets be a bit optimistic
     //private static bool consoleAllocated;
     private static FileLogger logger;
@@ -33,8 +33,8 @@ namespace rdpWrapper {
 
       Crasher.Listen();
 
-      //new Wrapper(new FileLogger()).EncryptResources();
-      //return;
+      // new Wrapper(new FileLogger()).EncryptResources();
+      // return;
 
       var consoleMode = args.Length > 0;
       if (consoleMode) {
@@ -53,7 +53,7 @@ namespace rdpWrapper {
         else {
           if (fixAction != null) {
             if (MessageBox.Show(errorMessage, Updater.ApplicationName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes) {
-              fixAction?.Invoke();
+              fixAction();
             }
           }
           else {
@@ -76,14 +76,14 @@ namespace rdpWrapper {
       else {
         StartWinForms();
       }
-      
+
       Environment.Exit(result);
     }
 
     private static void StartConsole(string[] args) {
       try {
         // always check for an updated version of the application unless disabled by launch arguments
-        // "-offline" should be the LAST parameter 
+        // "-offline" should be the LAST parameter
         var offline = args.Any(a => a == "-offline");
         if (!offline) {
           Updater.CheckForUpdates(Updater.CheckUpdatesMode.NotifyOnNewVersion);
@@ -102,10 +102,10 @@ namespace rdpWrapper {
 #if LITEVERSION
             logger.Log("No need for Ini file with TermWrap.");
 #else
-            //todo: check wrapper installed & wrapper is RdpWrap -> generate new Ini 
+            //todo: check wrapper installed & wrapper is RdpWrap -> generate new Ini
             var wrapper = new Wrapper(logger);
-            string wrapperIniPath = Path.Combine(wrapper.WrapperFolderPath, Wrapper.RdpWrapIniName);
-            wrapper.GenerateIniFile(wrapperIniPath, true);
+            var wrapperIniPath = Path.Combine(wrapper.WrapperFolderPath, Wrapper.RdpWrapIniName);
+            wrapper.GenerateIniFile(wrapperIniPath);
 #endif
             break;
           }
@@ -159,7 +159,7 @@ namespace rdpWrapper {
         // Console.Error.Close();
       }
     }
-    
+
     private static void StartWinForms() {
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);

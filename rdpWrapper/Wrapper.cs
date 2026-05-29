@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
@@ -550,7 +551,7 @@ namespace rdpWrapper {
 
     #region supplementary methods
 
-    private Aes GetAes() {
+    private static Aes GetAes() {
       var aes = Aes.Create();
       var salt = Encoding.UTF8.GetBytes(Updater.ApplicationTitle);
       using (var keyDerivation = new Rfc2898DeriveBytes(Updater.ApplicationName, salt, 100_000, HashAlgorithmName.SHA256)) {
@@ -570,19 +571,13 @@ namespace rdpWrapper {
         return;
       foreach (var fi in di.EnumerateFiles("*.*", SearchOption.AllDirectories)) {
         if (fi.Extension == ".cr") continue;
-        var memoryStream = new MemoryStream();
-        using (var cryptoStream = new CryptoStream(memoryStream, aes.CreateEncryptor(), CryptoStreamMode.Write)) {
-          using (var fileStream = File.OpenRead(fi.FullName)) {
-            fileStream.CopyTo(cryptoStream);
-            cryptoStream.FlushFinalBlock();
-          }
-          memoryStream.Position = 0;
-          fi.Delete();
-          var newFileName = fi.FullName + ".cr";
-          using (var fileStream = File.Create(newFileName)) {
-            memoryStream.CopyTo(fileStream);
-          }
-        }
+        var newFileName = fi.FullName + ".cr";
+        using (var inputFileStream = File.OpenRead(fi.FullName))
+        using (var outputFileStream = File.Create(newFileName))
+        using (var cryptoStream = new CryptoStream(outputFileStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
+        using (var gzipStream = new GZipStream(cryptoStream, CompressionMode.Compress))
+          inputFileStream.CopyTo(gzipStream);
+        fi.Delete();
       }
     }
 #endif
@@ -590,9 +585,8 @@ namespace rdpWrapper {
     private string ExtractResourceFile(string resourceName, string path, bool deleteExisting = false, bool archPrefix = false) {
       var filePath = Path.Combine(path, resourceName);
       if (File.Exists(filePath)) {
-        if (!deleteExisting) {
-          return filePath; //todo: delete
-        }
+        if (!deleteExisting)
+          return filePath;
         SafeDeleteFile(filePath);
       }
       try {
@@ -604,11 +598,12 @@ namespace rdpWrapper {
         using var stream = type.Assembly.GetManifestResourceStream(scriptsPath);
         if (stream == null)
           throw new Exception($"Resource '{resourceName}' is not found!");
-        using var fileStream = File.Create(filePath);
-        stream.Seek(0, SeekOrigin.Begin);
-        //stream.CopyTo(fileStream);
-        using var cryptoStream = new CryptoStream(stream, aes.CreateDecryptor(), CryptoStreamMode.Read);
-        cryptoStream.CopyTo(fileStream);
+        using (var fileStream = File.Create(filePath)) {
+          stream.Seek(0, SeekOrigin.Begin);
+          using (var cryptoStream = new CryptoStream(stream, aes.CreateDecryptor(), CryptoStreamMode.Read))
+          using (var gzipStream = new GZipStream(cryptoStream, CompressionMode.Decompress))
+            gzipStream.CopyTo(fileStream);
+        }
         return filePath;
       }
       catch (Exception ex) {
